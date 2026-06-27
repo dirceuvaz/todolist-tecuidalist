@@ -7,3 +7,4 @@ build/
 *.exe
 dist.rar
 embed-icon.js
+opencode.json
