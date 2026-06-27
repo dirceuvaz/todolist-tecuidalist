@@ -1,0 +1,9 @@
+node_modules/
+data/
+*.log
+.env
+dist/
+build/
+*.exe
+dist.rar
+embed-icon.js

@@ -1,0 +1,58 @@
+{
+  "name": "tecuidalist-app",
+  "version": "1.0.1",
+  "private": true,
+  "main": "electron.js",
+  "author": "Dirceu Vaz",
+  "scripts": {
+    "start": "node server/index.js",
+    "electron": "electron .",
+    "build": "node generate-icon.js && npx @electron/rebuild -f -w better-sqlite3 && npx electron-builder --win",
+    "rebuild-electron": "npx @electron/rebuild -f -w better-sqlite3"
+  },
+  "build": {
+    "appId": "com.tecuida.list",
+    "productName": "Te Cuida List",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "!build/",
+      "!embed-icon.js",
+      "!generate-icon.js",
+      "!icon.png",
+      "!*.md"
+    ],
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Te Cuida List"
+    },
+    "extraResources": [
+      {
+        "from": "build/icon.ico",
+        "to": "icon.ico"
+      }
+    ]
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^12.11.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@electron/rebuild": "^4.0.4",
+    "electron": "^28.0.0",
+    "electron-builder": "^26.15.3"
+  }
+}

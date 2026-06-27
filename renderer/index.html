@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Te Cuida List</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="view-landing" class="view auth-view" style="display:none">
+  <div class="auth-box" style="max-width:520px;text-align:center">
+    <h1>&#9632; Te Cuida List</h1>
+    <p class="version-badge">v1.0.1</p>
+    <p class="landing-subtitle">Gerencie suas tarefas com simplicidade e eficiência</p>
+    <div class="landing-desc">
+      <p>Te Cuida List é uma ferramenta de organização pessoal que ajuda você a manter o foco no que realmente importa.</p>
+      <p>Organize tarefas em quadros, defina prioridades, prazos e acompanhe seu progresso com relatórios visuais.</p>
+    </div>
+    <div class="landing-future">
+      <h3>Próximas funcionalidades</h3>
+      <div class="landing-features">
+        <div class="landing-feature">
+          <span class="landing-feature-icon">&#9200;</span>
+          <span>Pomodoro integrado</span>
+        </div>
+        <div class="landing-feature">
+          <span class="landing-feature-icon">&#9201;</span>
+          <span>Cronômetros</span>
+        </div>
+        <div class="landing-feature">
+          <span class="landing-feature-icon">&#128276;</span>
+          <span>Despertadores para tarefas personalizadas</span>
+        </div>
+      </div>
+    </div>
+    <div class="landing-credit">Idealizado por Dirceu Vaz</div>
+    <button class="btn btn-primary btn-full" onclick="startApp()" style="margin-top:20px">Começar</button>
+  </div>
+</div>
+
+<div id="view-setup" class="view auth-view" style="display:none">
+  <div class="auth-box">
+    <h1>&#9632; Te Cuida List</h1>
+    <p class="auth-subtitle">Primeira vez? Vamos configurar seu quadro</p>
+    <form id="setupForm">
+      <input type="text" id="setupName" placeholder="Seu nome" required>
+      <input type="text" id="setupUsername" placeholder="Usuário para login" required autocomplete="username">
+      <input type="email" id="setupEmail" placeholder="E-mail (opcional)" autocomplete="email">
+      <input type="password" id="setupPass" placeholder="Senha" required autocomplete="new-password">
+      <input type="text" id="setupBoard" placeholder="Nome do quadro (ex: Meu Projeto)" value="Meu Quadro">
+      <div class="error-msg" id="setupError"></div>
+      <button type="submit" class="btn btn-primary btn-full">Criar Quadro</button>
+    </form>
+  </div>
+</div>
+
+<div id="view-login" class="view auth-view" style="display:none">
+  <div class="auth-box">
+    <h1>&#9632; Te Cuida List</h1>
+    <p class="auth-subtitle" id="loginSubtitle">Gerenciador de Tarefas</p>
+    <form id="loginForm">
+      <input type="text" id="loginUser" placeholder="Usuário" required autocomplete="username">
+      <input type="password" id="loginPass" placeholder="Senha" required autocomplete="current-password">
+      <div class="error-msg" id="loginError"></div>
+      <button type="submit" class="btn btn-primary btn-full">Entrar</button>
+    </form>
+    <div style="text-align:center;margin-top:10px">
+      <a href="#" onclick="showView('users');return false" style="font-size:13px">Ver todos os usuários</a>
+    </div>
+  </div>
+</div>
+
+<div id="view-users" class="view auth-view" style="display:none">
+  <div class="auth-box" style="max-width:500px">
+    <h1>&#9632; Te Cuida List</h1>
+    <p class="auth-subtitle">Selecione um usuário para continuar</p>
+    <div id="usersList"></div>
+    <div class="error-msg" id="usersError"></div>
+    <button class="btn btn-secondary btn-full" onclick="showRegisterForm()" style="margin-top:15px">+ Adicionar novo usuário</button>
+    <form id="registerForm" style="display:none;margin-top:15px">
+      <input type="text" id="regName" placeholder="Nome" required>
+      <input type="text" id="regUsername" placeholder="Usuário para login" required>
+      <input type="password" id="regPass" placeholder="Senha" required>
+      <div class="error-msg" id="regError"></div>
+      <button type="submit" class="btn btn-primary btn-full">Criar Usuário</button>
+      <button type="button" class="btn btn-full" onclick="hideRegisterForm()" style="margin-top:8px">Cancelar</button>
+    </form>
+    <button class="btn btn-full" onclick="backFromUsers()" style="margin-top:12px">Voltar</button>
+  </div>
+</div>
+
+<div id="view-dashboard" class="view" style="display:none">
+  <header>
+    <h1>&#9632; <span id="dashTitle">Te Cuida List</span></h1>
+    <div style="flex:1"></div>
+    <div class="header-right">
+      <span class="user-name" id="dashUserDisplay"></span>
+      <button class="btn btn-small" onclick="showBoardManager()">Gerenciar Quadros</button>
+      <button class="btn btn-small" onclick="showBoardSelector(showKanban)">Quadro Kanban</button>
+      <button class="btn btn-small" onclick="toggleTheme()" id="themeToggle">&#9790; Tema</button>
+      <button class="btn btn-small" onclick="switchUser()">Trocar usuário</button>
+    </div>
+  </header>
+  <main>
+    <div class="dashboard-header">
+      <h2>Dashboard</h2>
+    </div>
+    <div class="dashboard-stats" id="dashboardStats"></div>
+    <div class="dashboard-boards" id="dashboardBoards"></div>
+  </main>
+</div>
+
+<div id="view-boards" class="view" style="display:none">
+  <header>
+    <h1>&#9632; Gerenciar Quadros</h1>
+    <div style="flex:1"></div>
+    <div class="header-right">
+      <button class="btn btn-small btn-primary" onclick="showCreateBoardModal()">+ Novo Quadro</button>
+      <button class="btn btn-small" onclick="showView('dashboard')">Voltar</button>
+    </div>
+  </header>
+  <main>
+    <div id="boardsList"></div>
+  </main>
+</div>
+
+<div id="view-app" class="view" style="display:none">
+  <header>
+    <h1>&#9632; <span id="boardTitle">Te Cuida List</span></h1>
+    <div style="flex:1"></div>
+    <div class="header-right">
+      <span class="user-name" id="userDisplay"></span>
+      <button class="btn btn-small" onclick="showDash()">Dashboard</button>
+      <button class="btn btn-small" onclick="showBoardSelector(switchToBoard)" id="boardSwitcherBtn">Trocar Quadro</button>
+      <button class="btn btn-small" onclick="toggleTheme()" id="themeToggle2">&#9790; Tema</button>
+      <button class="btn btn-small" onclick="switchUser()">Trocar usuário</button>
+      <button class="btn btn-small" onclick="exportCSV()">Exportar CSV</button>
+      <button class="btn btn-small" onclick="document.getElementById('importInput').click()">Importar CSV</button>
+      <input type="file" id="importInput" accept=".csv" style="display:none" onchange="importCSV(event)">
+    </div>
+  </header>
+  <main>
+    <div class="board-header">
+      <h2>Quadro Kanban</h2>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-small" id="btnToggleArchived" onclick="toggleArchived()">Arquivadas</button>
+        <button class="btn btn-primary" id="btnNovaTarefa">+ Nova Tarefa</button>
+      </div>
+    </div>
+    <div class="board" id="board">
+      <div class="column" data-status="todo">
+        <div class="column-header">
+          <h2>&#9679; A Fazer</h2>
+          <span class="count" id="count-todo">0</span>
+        </div>
+        <input type="text" class="column-search" id="search-todo" placeholder="Filtrar tarefas..." oninput="filterColumn('todo')">
+        <div class="cards-container" id="container-todo" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+      </div>
+      <div class="column" data-status="doing">
+        <div class="column-header">
+          <h2>&#9679; Em Andamento</h2>
+          <span class="count" id="count-doing">0</span>
+        </div>
+        <input type="text" class="column-search" id="search-doing" placeholder="Filtrar tarefas..." oninput="filterColumn('doing')">
+        <div class="cards-container" id="container-doing" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+      </div>
+      <div class="column" data-status="done">
+        <div class="column-header">
+          <h2>&#9679; Concluído</h2>
+          <span class="count" id="count-done">0</span>
+        </div>
+        <input type="text" class="column-search" id="search-done" placeholder="Filtrar tarefas..." oninput="filterColumn('done')">
+        <div class="cards-container" id="container-done" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modal-overlay" id="taskModalOverlay">
+  <div class="modal" style="max-width:520px">
+    <h3 id="taskModalTitle">Nova Tarefa</h3>
+    <textarea id="taskInput" placeholder="Digite a descrição da tarefa..."></textarea>
+    <div class="form-row">
+      <div class="form-group" style="flex:1">
+        <label>Atividade para:</label>
+        <input type="text" id="taskAssignee" placeholder="Ex: Fulano">
+      </div>
+      <div class="form-group" style="flex:1">
+        <label>Prazo:</label>
+        <input type="datetime-local" id="taskDeadline">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group" style="flex:1">
+        <label>Impacto:</label>
+        <select id="taskImpact">
+          <option value="baixo">Baixo</option>
+          <option value="medio">Médio</option>
+          <option value="grave">Grave</option>
+          <option value="gravissimo">Gravíssimo</option>
+        </select>
+      </div>
+      <div class="form-group" style="flex:1">
+        <label>Prioridade:</label>
+        <select id="taskPriority">
+          <option value="baixa">Baixa</option>
+          <option value="media">Média</option>
+          <option value="alta">Alta</option>
+          <option value="imediato">Imediato</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Quadro:</label>
+      <select id="taskBoard"></select>
+    </div>
+    <div class="status-selector" id="statusSelector">
+      <button type="button" class="status-opt active" data-status="todo">&#9679; A Fazer</button>
+      <button type="button" class="status-opt" data-status="doing">&#9679; Em Andamento</button>
+      <button type="button" class="status-opt" data-status="done">&#9679; Concluído</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeTaskModal()">Cancelar</button>
+      <button class="btn btn-primary" id="modalSaveBtn" onclick="saveTask()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="boardModalOverlay">
+  <div class="modal" style="max-width:420px">
+    <h3 id="boardModalTitle">Novo Quadro</h3>
+    <input type="text" id="boardInput" class="modal-input" placeholder="Nome do quadro">
+    <textarea id="boardDescInput" placeholder="Descrição (opcional)" style="width:100%;min-height:60px;padding:10px 12px;border:1px solid var(--modal-input-border);border-radius:6px;background:var(--modal-input-bg);color:var(--modal-input-color);font-size:14px;font-family:inherit;resize:vertical;margin-bottom:16px"></textarea>
+    <div class="error-msg" id="boardModalError"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeBoardModal()">Cancelar</button>
+      <button class="btn btn-primary" id="boardModalSaveBtn" onclick="saveBoard()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="moverModalOverlay">
+  <div class="modal" style="max-width:380px">
+    <h3>Mover Tarefa</h3>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:14px">Selecione o quadro de destino:</p>
+    <div class="form-group">
+      <select id="moverBoardSelect" class="modal-input"></select>
+    </div>
+    <div class="error-msg" id="moverModalError"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeMoverModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="confirmMoveTask()">Mover</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="confirmModalOverlay">
+  <div class="modal" style="max-width:380px">
+    <h3 id="confirmModalTitle">Confirmação</h3>
+    <p id="confirmModalDesc" style="font-size:13px;color:var(--text2);margin-bottom:18px"></p>
+    <div class="modal-actions">
+      <button class="btn" id="confirmModalCancelBtn">Cancelar</button>
+      <button class="btn btn-danger" id="confirmModalOkBtn">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="boardSelectOverlay">
+  <div class="modal" style="max-width:400px">
+    <h3>Selecionar Quadro</h3>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:14px">Escolha o quadro que deseja visualizar:</p>
+    <div id="boardSelectList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeBoardSelect()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="passwordModalOverlay">
+  <div class="modal" style="max-width:380px">
+    <h3 id="passwordModalTitle">Senha</h3>
+    <p id="passwordModalDesc" style="font-size:13px;color:var(--text2);margin-bottom:14px"></p>
+    <input type="password" id="passwordInput" placeholder="Digite a senha" class="modal-input">
+    <div class="error-msg" id="passwordModalError"></div>
+    <div class="modal-actions">
+      <button class="btn" id="passwordModalCancelBtn">Cancelar</button>
+      <button class="btn btn-primary" id="passwordModalConfirmBtn">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
